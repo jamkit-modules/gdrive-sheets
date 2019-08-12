@@ -35,8 +35,10 @@ GDriveSheets.get_headers = function(feed) {
     return headers;
 }
 
-GDriveSheets.get_feed_url = function(sheet_key) {
-    return "https://spreadsheets.google.com/feeds/cells/" + sheet_key + "/1/public/full?alt=json";
+GDriveSheets.get_feed_url = function(sheet_key, sheet_no) {
+    var path = sheet_key + "/" + (sheet_no || 1).toString();
+
+    return "https://spreadsheets.google.com/feeds/cells/" + path + "/public/full?alt=json";
 }
 
 __MODULE__ = GDriveSheets;
