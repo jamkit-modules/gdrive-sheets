@@ -2,6 +2,26 @@ GDriveSheets = (function() {
     return {};
 })();
 
+GDriveSheets.fetch_data = function(sheet_key, sheet_no) {
+    return new Promise(function(resolve, reject) {
+        var url = GDriveSheets.get_feed_url(sheet_key, sheet_no);
+	
+        fetch(url).then(function(response) {
+            if(response.ok) {
+                response.json().then(function(feed) {
+                    resolve(GDriveSheets.feed_to_data(feed));
+                }, function() {
+                    reject();
+                });
+            } else {
+                reject();
+            }
+        }, function() {
+            reject();
+        });
+    });
+}
+
 GDriveSheets.feed_to_data = function(feed) {
     var headers = GDriveSheets.get_headers(feed);
     var entry = feed["feed"]["entry"].slice(headers.length);
