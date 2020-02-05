@@ -3,18 +3,22 @@ GDriveSheets = (function() {
 })();
 
 GDriveSheets.feed_to_data = function(feed) {
-    var entry = feed["feed"]["entry"];
     var headers = GDriveSheets.get_headers(feed);
-    var data = [];
+    var entry = feed["feed"]["entry"].slice(headers.length);
+    var data = [], datum = {}, row = "2";
 
-    for (var i = headers.length; i < entry.length; i = i + headers.length) {
-        var datum = {};
+    for (var i = 0; i < entry.length; ++i) {
+        var cell = entry[i]["gs$cell"];
 
-        for (var h = 0; h < headers.length; ++h) {
-            datum[headers[h]] = entry[i + h]["content"]["$t"]
+        if (cell["row"] !== row) {
+            data.push(datum), datum = {}, row = cell["row"];
         }
 
-        data.push(datum);
+        var col = parseInt(cell["col"]);
+
+        if (col - 1< headers.length) {
+            datum[headers[col - 1]] = entry[i]["content"]["$t"]
+        }
     }
 
     return data;
