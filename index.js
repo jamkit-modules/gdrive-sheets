@@ -2,9 +2,9 @@ GDriveSheets = (function() {
     return {};
 })();
 
-GDriveSheets.fetch_data = function(sheet_key, sheet_no) {
+GDriveSheets.fetch_data = function(sheet_key, worksheet_id) {
     return new Promise(function(resolve, reject) {
-        var url = GDriveSheets.get_feed_url(sheet_key, sheet_no);
+        var url = GDriveSheets.get_feed_url(sheet_key, worksheet_id);
 	
         fetch(url).then(function(response) {
             if(response.ok) {
@@ -36,10 +36,12 @@ GDriveSheets.feed_to_data = function(feed) {
 
         var col = parseInt(cell["col"]);
 
-        if (col - 1< headers.length) {
+        if (col - 1 < headers.length) {
             datum[headers[col - 1]] = entry[i]["content"]["$t"]
         }
     }
+
+    data.push(datum);
 
     return data;
 }
@@ -59,12 +61,12 @@ GDriveSheets.get_headers = function(feed) {
     return headers;
 }
 
-GDriveSheets.get_feed_url = function(sheet_key, sheet_no) {
+GDriveSheets.get_feed_url = function(sheet_key, worksheet_id) {
     var url = "https://spreadsheets.google.com/feeds/cells/";
 
     url += sheet_key;
     url += "/";
-    url += (sheet_no || 1).toString();
+    url += (worksheet_id || 1).toString();
     url += "/public/full?alt=json";
 
     return url;
