@@ -41,7 +41,9 @@ GDriveSheets.feed_to_data = function(feed) {
         }
     }
 
-    data.push(datum);
+	if (datum) {
+    	data.push(datum);
+	}
 
     return data;
 }
