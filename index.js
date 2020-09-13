@@ -1,15 +1,17 @@
 GDriveSheets = (function() {
-    return {};
+    return {}
 })();
 
 GDriveSheets.fetch_data = function(sheet_key, worksheet_id) {
+    var self = this;
+
     return new Promise(function(resolve, reject) {
-        var url = GDriveSheets.get_feed_url(sheet_key, worksheet_id);
+        var url = self.get_feed_url(sheet_key, worksheet_id);
 	
         fetch(url).then(function(response) {
             if(response.ok) {
                 response.json().then(function(feed) {
-                    resolve(GDriveSheets.feed_to_data(feed));
+                    resolve(self.feed_to_data(feed));
                 }, function() {
                     reject();
                 });
@@ -23,7 +25,7 @@ GDriveSheets.fetch_data = function(sheet_key, worksheet_id) {
 }
 
 GDriveSheets.feed_to_data = function(feed) {
-    var headers = GDriveSheets.get_headers(feed);
+    var headers = this.get_headers(feed);
     var entry = feed["feed"]["entry"].slice(headers.length);
     var data = [], datum = {}, row = "2";
 
