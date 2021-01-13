@@ -1,24 +1,25 @@
 var module = (function() {
     return {
         fetch_data: function(sheet_key, worksheet_id) {
-            var self = this;
+            const self = this;
 
             return new Promise(function(resolve, reject) {
                 var url = self.get_feed_url(sheet_key, worksheet_id);
             
-                fetch(url).then(function(response) {
-                    if(response.ok) {
-                        response.json().then(function(feed) {
-                            resolve(self.feed_to_data(feed));
-                        }, function() {
-                            reject();
-                        });
-                    } else {
-                        reject();
-                    }
-                }, function() {
-                    reject();
-                });
+                fetch(url)
+                    .then(function(response) {
+                        if(response.ok) {
+                            return response.json();
+                        } else {
+                            return Promise.reject({ "status": response.status });
+                        }
+                    })
+                    .then(function(feed) {
+                        resolve(self.feed_to_data(feed));
+                    })
+                    .catch(function(error) {
+                        reject(error);
+                    });
             });
         },
 
