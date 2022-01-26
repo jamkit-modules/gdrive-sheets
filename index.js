@@ -9,7 +9,9 @@ var module = (function() {
             var entry = rows[row]["c"], datum = {};
 
             for (var col = 0; col < entry.length; col++) {
-                datum[headers[col]] = entry[col]["v"];
+                if (headers[col]) {
+                    datum[headers[col]] = (entry[col] || {})["v"] || "";
+                }
             }
 
             data.push(datum);
@@ -24,7 +26,7 @@ var module = (function() {
         var headers = [];
     
         for (var col = 0; col < entry.length; col++) {
-            headers.push(entry[col]["v"]);
+            headers.push(((entry[col] || {})["v"] || "").trim());
         }
     
         return headers;
